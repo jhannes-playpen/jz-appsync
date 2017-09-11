@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import javax.sql.DataSource;
 
 import org.h2.jdbcx.JdbcConnectionPool;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.soprasteria.javazone.SampleData;
@@ -41,7 +40,6 @@ public class PersonSyncTest {
     }
 
     @Test
-    @Ignore
     public void shouldSyncUpdates() {
         Person original = sampleData.samplePerson();
         serverRepo.save(original);
