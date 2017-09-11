@@ -2,6 +2,7 @@ package com.soprasteria.javazone;
 
 import java.time.LocalDate;
 import java.util.Random;
+import java.util.UUID;
 
 import com.soprasteria.javazone.person.Person;
 import com.soprasteria.javazone.product.Product;
@@ -39,11 +40,14 @@ public class SampleData {
     }
 
     public Product minimalProduct() {
-        return new Product();
+        Product product = new Product();
+        product.setProductName(pickOne(new String[] { "apples", "bananas", "cheese", "dumplings" }));
+        return product;
     }
 
     public Product sampleProduct() {
         Product product = new Product();
+        product.setId(UUID.randomUUID());
         product.setProductName(pickOne(new String[] { "apples", "bananas", "cheese", "dumplings" }));
         product.setProductCategory(pickOne(new String[] { "fruit", "dinner" }));
         product.setPriceInCents(random.nextInt(10000) * 10);

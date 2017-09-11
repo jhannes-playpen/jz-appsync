@@ -3,6 +3,7 @@ package com.soprasteria.javazone.product;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Instant;
+import java.util.UUID;
 
 import javax.sql.DataSource;
 
@@ -21,10 +22,11 @@ public class ProductRepositoryTest {
     @Test
     public void shouldRetrieveSavedProduct() {
         Product product = sampleData.sampleProduct();
-        assertThat(product).hasNoNullFieldsOrPropertiesExcept("id");
+        UUID id = product.getId();
+        assertThat(product).hasNoNullFieldsOrProperties();
 
         repository.save(product);
-        assertThat(repository.retrieve(product.getId()))
+        assertThat(repository.retrieve(id))
             .isEqualToComparingFieldByField(product);
     }
 

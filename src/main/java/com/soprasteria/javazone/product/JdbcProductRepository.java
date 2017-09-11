@@ -24,14 +24,16 @@ public class JdbcProductRepository extends AbstractJdbRepository implements Prod
 
     @Override
     public void save(Product product) {
-        product.setId(UUID.randomUUID());
-        executeUpdate("insert into products (id, updated_at) values (?, ?)",
-            product.getId(), Instant.now());
+        if (product.getId() == null) {
+            product.setId(UUID.randomUUID());
+        }
+        executeUpdate("insert into products (id, product_name, product_category, price_in_cents, updated_at) values (?, ?, ?, ?, ?)",
+            product.getId(), product.getProductName(), product.getProductCategory(), product.getPriceInCents(), Instant.now());
     }
 
     @Override
     public Product retrieve(UUID id) {
-        return retrieveById("select * from products where id = ?", rs -> mapRow(rs), id);
+        return retrieveById("select * from products where id = ?", this::mapRow, id);
     }
 
     @Override
@@ -42,6 +44,10 @@ public class JdbcProductRepository extends AbstractJdbRepository implements Prod
     private Product mapRow(ResultSet rs) throws SQLException {
         Product product = new Product();
         product.setId(UUID.fromString(rs.getString("id")));
+        product.setProductName(rs.getString("product_name"));
+        product.setProductCategory(rs.getString("product_category"));
+        int priceInCents = rs.getInt("price_in_cents");
+        product.setPriceInCents(rs.wasNull() ? null : priceInCents);
         return product;
     }
 
