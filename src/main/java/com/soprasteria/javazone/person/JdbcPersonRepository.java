@@ -61,8 +61,7 @@ public class JdbcPersonRepository extends AbstractJdbRepository implements Perso
 
     @Override
     public void delete(long id) {
-        // TODO Auto-generated method stub
-
+        executeUpdate("delete from persons where id = ?", id);
     }
 
 }
