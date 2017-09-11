@@ -2,6 +2,7 @@ package com.soprasteria.javazone.person;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,20 +24,26 @@ public class JdbcPersonRepository extends AbstractJdbRepository implements Perso
 
     @Override
     public void save(Person person) {
+        Instant now = Instant.now();
         if (person.getId() != null) {
-            int rowCount = executeUpdate("update persons set first_name = ?, middle_name = ?, last_name = ?, date_of_birth = ? where id = ?",
-                person.getFirstName(), person.getMiddleName(), person.getLastName(), person.getDateOfBirth(), person.getId());
+            int rowCount = executeUpdate("update persons set first_name = ?, middle_name = ?, last_name = ?, date_of_birth = ?, updated_at = ? where id = ?",
+                person.getFirstName(), person.getMiddleName(), person.getLastName(), person.getDateOfBirth(), now, person.getId());
             if (rowCount > 0) return;
         } else {
             person.setId(UUID.randomUUID());
         }
-        executeUpdate("insert into persons (first_name, middle_name, last_name, date_of_birth, id) values (?, ?, ?, ?, ?)",
-            person.getFirstName(), person.getMiddleName(), person.getLastName(), person.getDateOfBirth(), person.getId());
+        executeUpdate("insert into persons (first_name, middle_name, last_name, date_of_birth, updated_at, id) values (?, ?, ?, ?, ?, ?)",
+            person.getFirstName(), person.getMiddleName(), person.getLastName(), person.getDateOfBirth(), now, person.getId());
     }
 
     @Override
     public List<Person> list() {
         return queryForList("select * from persons", this::mapRow);
+    }
+
+    @Override
+    public List<Person> listChanges(Instant since) {
+        return queryForList("select * from persons where updated_at > ?", this::mapRow, since);
     }
 
     @Override

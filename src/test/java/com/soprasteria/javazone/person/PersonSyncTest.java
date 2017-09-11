@@ -61,10 +61,11 @@ public class PersonSyncTest {
     }
 
     @Test
-    public void shouldSyncUpdates() throws IOException {
+    public void shouldSyncUpdates() throws IOException, InterruptedException {
         Person original = sampleData.samplePerson();
         serverRepo.save(original);
         personSync.doSync();
+        Thread.sleep(10);
 
         Person updated = sampleData.samplePerson();
         updated.setId(original.getId());

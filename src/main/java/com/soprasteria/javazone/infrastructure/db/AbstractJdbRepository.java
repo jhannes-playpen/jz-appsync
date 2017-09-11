@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,9 +52,10 @@ public class AbstractJdbRepository {
         }
     }
 
-    protected List<Person> queryForList(String sql, ResultSetMapper<Person> mapper) {
+    protected List<Person> queryForList(String sql, ResultSetMapper<Person> mapper, Object... parameters) {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                setParameters(stmt, parameters);
 
                 try (ResultSet rs = stmt.executeQuery()) {
                     List<Person> result = new ArrayList<>();
@@ -70,15 +73,22 @@ public class AbstractJdbRepository {
     protected int executeUpdate(String sql, Object... parameters) {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement stmt = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
-                int index = 1;
-                for (Object parameter : parameters) {
-                    stmt.setObject(index++, parameter);
-                }
-
+                setParameters(stmt, parameters);
                 return stmt.executeUpdate();
             }
         } catch (SQLException e) {
             throw ExceptionHelper.soften(e);
+        }
+    }
+
+    private void setParameters(PreparedStatement stmt, Object... parameters) throws SQLException {
+        int index = 1;
+        for (Object parameter : parameters) {
+            if (parameter instanceof Instant) {
+                stmt.setObject(index++, Timestamp.from((Instant)parameter));
+            } else {
+                stmt.setObject(index++, parameter);
+            }
         }
     }
 
