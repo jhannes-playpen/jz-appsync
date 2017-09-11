@@ -20,11 +20,10 @@ public class PersonSync {
     public void doSync() {
         JsonArray personJson = server.list();
         for (Person person : personJson.objects(this::toPerson)) {
-
+            clientRepo.save(person);
         }
 
         for (Person person : serverRepo.list()) {
-            clientRepo.save(person);
         }
     }
 
