@@ -67,4 +67,19 @@ public class AbstractJdbRepository {
         }
     }
 
+    protected int executeUpdate(String sql, Object... parameters) {
+        try (Connection connection = dataSource.getConnection()) {
+            try (PreparedStatement stmt = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+                int index = 1;
+                for (Object parameter : parameters) {
+                    stmt.setObject(index++, parameter);
+                }
+    
+                return stmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw ExceptionHelper.soften(e);
+        }
+    }
+
 }

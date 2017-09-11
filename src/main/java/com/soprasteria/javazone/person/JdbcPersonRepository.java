@@ -1,8 +1,6 @@
 package com.soprasteria.javazone.person;
 
-import java.sql.Connection;
 import java.sql.Date;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -11,7 +9,6 @@ import javax.sql.DataSource;
 
 import org.flywaydb.core.Flyway;
 
-import com.soprasteria.javazone.infrastructure.ExceptionHelper;
 import com.soprasteria.javazone.infrastructure.db.AbstractJdbRepository;
 
 public class JdbcPersonRepository extends AbstractJdbRepository implements PersonRepository {
@@ -33,30 +30,13 @@ public class JdbcPersonRepository extends AbstractJdbRepository implements Perso
         }
 
         Long id = save("insert into persons (first_name, middle_name, last_name, date_of_birth) values (?, ?, ?, ?)",
-            stmt -> writeToDatabase(stmt, person));
+            stmt -> {
+                stmt.setString(1, person.getFirstName());
+                stmt.setString(2, person.getMiddleName());
+                stmt.setString(3, person.getLastName());
+                stmt.setDate(4, Date.valueOf(person.getDateOfBirth()));
+            });
         person.setId(id);
-    }
-
-    protected int executeUpdate(String sql, Object... parameters) {
-        try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement stmt = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
-                int index = 1;
-                for (Object parameter : parameters) {
-                    stmt.setObject(index++, parameter);
-                }
-
-                return stmt.executeUpdate();
-            }
-        } catch (SQLException e) {
-            throw ExceptionHelper.soften(e);
-        }
-    }
-
-    private void writeToDatabase(PreparedStatement stmt, Person person) throws SQLException {
-        stmt.setString(1, person.getFirstName());
-        stmt.setString(2, person.getMiddleName());
-        stmt.setString(3, person.getLastName());
-        stmt.setDate(4, Date.valueOf(person.getDateOfBirth()));
     }
 
     @Override
