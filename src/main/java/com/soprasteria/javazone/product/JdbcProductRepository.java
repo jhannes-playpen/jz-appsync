@@ -26,9 +26,15 @@ public class JdbcProductRepository extends AbstractJdbRepository implements Prod
     public void save(Product product) {
         if (product.getId() == null) {
             product.setId(UUID.randomUUID());
+        } else {
+            int rowCount = executeUpdate("update products set product_name=?, product_category=?, price_in_cents=?, updated_at=? where id=?",
+                product.getProductName(), product.getProductCategory(), product.getPriceInCents(), Instant.now(), product.getId());
+            if (rowCount > 0) {
+                return;
+            }
         }
-        executeUpdate("insert into products (id, product_name, product_category, price_in_cents, updated_at) values (?, ?, ?, ?, ?)",
-            product.getId(), product.getProductName(), product.getProductCategory(), product.getPriceInCents(), Instant.now());
+        executeUpdate("insert into products (product_name, product_category, price_in_cents, updated_at, id) values (?, ?, ?, ?, ?)",
+            product.getProductName(), product.getProductCategory(), product.getPriceInCents(), Instant.now(), product.getId());
     }
 
     @Override

@@ -64,5 +64,16 @@ public class ProductRepositoryTest {
         assertThat(repository.retrieve(product.getId())).isNull();
     }
 
+    @Test
+    public void shouldUpdateProduct() {
+        Product original = sampleData.sampleProduct();
+        repository.save(original);
 
+        Product updated = sampleData.sampleProduct();
+        updated.setId(original.getId());
+        repository.save(updated);
+
+        assertThat(repository.retrieve(original.getId()))
+            .isEqualToComparingFieldByField(updated);
+    }
 }
