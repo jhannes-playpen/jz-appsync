@@ -19,6 +19,16 @@ public class ProductRepositoryTest {
     private SampleData sampleData = new SampleData();
 
     @Test
+    public void shouldRetrieveSavedProduct() {
+        Product product = sampleData.sampleProduct();
+        assertThat(product).hasNoNullFieldsOrPropertiesExcept("id");
+
+        repository.save(product);
+        assertThat(repository.retrieve(product.getId()))
+            .isEqualToComparingFieldByField(product);
+    }
+
+    @Test
     public void shouldSaveMinimalProduct() {
         Product product = sampleData.minimalProduct();
 

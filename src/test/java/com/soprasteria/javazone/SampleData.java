@@ -43,7 +43,11 @@ public class SampleData {
     }
 
     public Product sampleProduct() {
-        return new Product();
+        Product product = new Product();
+        product.setProductName(pickOne(new String[] { "apples", "bananas", "cheese", "dumplings" }));
+        product.setProductCategory(pickOne(new String[] { "fruit", "dinner" }));
+        product.setPriceInCents(random.nextInt(10000) * 10);
+        return product;
     }
 
 }

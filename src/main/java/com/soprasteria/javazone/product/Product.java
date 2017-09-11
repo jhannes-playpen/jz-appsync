@@ -14,4 +14,10 @@ public class Product {
     @Getter @Setter
     private UUID id;
 
+    @Getter @Setter
+    private String productName, productCategory;
+
+    @Getter @Setter
+    private Integer priceInCents;
+
 }
