@@ -1,5 +1,6 @@
 package com.soprasteria.javazone.person;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.sql.DataSource;
@@ -18,8 +19,11 @@ public class JdbcPersonRepository extends AbstractJdbRepository implements Perso
 
     @Override
     public void save(Person person) {
-        Long id = save("insert into persons (first_name) values (?)", stmt -> {
+        Long id = save("insert into persons (first_name, middle_name, last_name, date_of_birth) values (?, ?, ?, ?)", stmt -> {
             stmt.setString(1, person.getFirstName());
+            stmt.setString(2, person.getMiddleName());
+            stmt.setString(3, person.getLastName());
+            stmt.setDate(4, Date.valueOf(person.getDateOfBirth()));
         });
         person.setId(id);
     }
@@ -33,6 +37,9 @@ public class JdbcPersonRepository extends AbstractJdbRepository implements Perso
         Person person = new Person();
         person.setId(rs.getLong("id"));
         person.setFirstName(rs.getString("first_name"));
+        person.setMiddleName(rs.getString("middle_name"));
+        person.setLastName(rs.getString("last_name"));
+        person.setDateOfBirth(rs.getDate("date_of_birth").toLocalDate());
         return person;
     }
 
