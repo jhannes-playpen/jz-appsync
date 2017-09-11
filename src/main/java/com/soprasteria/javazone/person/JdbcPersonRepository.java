@@ -1,6 +1,5 @@
 package com.soprasteria.javazone.person;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -28,16 +27,11 @@ public class JdbcPersonRepository extends AbstractJdbRepository implements Perso
             int rowCount = executeUpdate("update persons set first_name = ?, middle_name = ?, last_name = ?, date_of_birth = ? where id = ?",
                 person.getFirstName(), person.getMiddleName(), person.getLastName(), person.getDateOfBirth(), person.getId());
             if (rowCount > 0) return;
+        } else {
+            person.setId(UUID.randomUUID());
         }
-
-        Long id = save("insert into persons (first_name, middle_name, last_name, date_of_birth) values (?, ?, ?, ?)",
-            stmt -> {
-                stmt.setString(1, person.getFirstName());
-                stmt.setString(2, person.getMiddleName());
-                stmt.setString(3, person.getLastName());
-                stmt.setDate(4, Date.valueOf(person.getDateOfBirth()));
-            });
-        person.setId(id);
+        executeUpdate("insert into persons (first_name, middle_name, last_name, date_of_birth, id) values (?, ?, ?, ?, ?)",
+            person.getFirstName(), person.getMiddleName(), person.getLastName(), person.getDateOfBirth(), person.getId());
     }
 
     @Override
@@ -52,7 +46,7 @@ public class JdbcPersonRepository extends AbstractJdbRepository implements Perso
 
     private Person mapRow(ResultSet rs) throws SQLException {
         Person person = new Person();
-        person.setId(rs.getLong("id"));
+        person.setId(UUID.fromString(rs.getString("id")));
         person.setFirstName(rs.getString("first_name"));
         person.setMiddleName(rs.getString("middle_name"));
         person.setLastName(rs.getString("last_name"));

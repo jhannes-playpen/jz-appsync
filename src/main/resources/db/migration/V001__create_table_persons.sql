@@ -1,5 +1,5 @@
 create table persons (
-	id number primary key auto_increment,
+	id uuid primary key,
 	first_name varchar(50) not null,
 	middle_name varchar(50) not null,
 	last_name varchar(50) not null,

@@ -25,7 +25,7 @@ public class Person {
 
     public JsonObject toJson() {
         return new JsonObject()
-            .put("id", getId())
+            .put("id", getId().toString())
             .put("first-name", getFirstName())
             .put("middle-name", getMiddleName())
             .put("last-name", getLastName())
@@ -34,7 +34,7 @@ public class Person {
 
     public static Person fromJson(JsonObject json) {
         Person person = new Person();
-        person.setId(json.requiredLong("id"));
+        person.setId(UUID.fromString(json.requiredString("id")));
         person.setFirstName(json.requiredString("first-name"));
         person.setMiddleName(json.requiredString("middle-name"));
         person.setLastName(json.requiredString("last-name"));
