@@ -16,7 +16,7 @@ public class PersonSyncTest {
     private DataSource clientDs = JdbcConnectionPool.create("jdbc:h2:mem:client", "", "");
     private PersonRepository clientRepo = new JdbcPersonRepository(clientDs);
 
-    private DataSource serverDs = JdbcConnectionPool.create("jdbc:h2:mem:client", "", "");
+    private DataSource serverDs = JdbcConnectionPool.create("jdbc:h2:mem:server", "", "");
     private PersonRepository serverRepo = new JdbcPersonRepository(serverDs);
 
     @Test
