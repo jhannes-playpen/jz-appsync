@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.Random;
 
 import com.soprasteria.javazone.person.Person;
+import com.soprasteria.javazone.product.Product;
 
 public class SampleData {
 
@@ -35,6 +36,10 @@ public class SampleData {
         person.setLastName(pickOne(lastNames));
         person.setDateOfBirth(null);
         return person;
+    }
+
+    public Product minimalProduct() {
+        return new Product();
     }
 
 }
