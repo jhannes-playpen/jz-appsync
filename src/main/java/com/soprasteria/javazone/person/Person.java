@@ -29,16 +29,16 @@ public class Person {
             .put("first-name", getFirstName())
             .put("middle-name", getMiddleName())
             .put("last-name", getLastName())
-            .put("date-of-birth", getDateOfBirth().toString());
+            .put("date-of-birth", getDateOfBirth() != null ? getDateOfBirth().toString() : null);
     }
 
     public static Person fromJson(JsonObject json) {
         Person person = new Person();
         person.setId(UUID.fromString(json.requiredString("id")));
         person.setFirstName(json.requiredString("first-name"));
-        person.setMiddleName(json.requiredString("middle-name"));
+        person.setMiddleName(json.stringValue("middle-name").orElse(null));
         person.setLastName(json.requiredString("last-name"));
-        person.setDateOfBirth(LocalDate.parse(json.requiredString("date-of-birth")));
+        person.setDateOfBirth(json.stringValue("date-of-birth").map(LocalDate::parse).orElse(null));
         return person;
     }
 
