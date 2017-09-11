@@ -1,6 +1,7 @@
 package com.soprasteria.javazone.person;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.URL;
@@ -34,11 +35,20 @@ public class PersonSyncServer {
 
         String path = "/api/persons";
         server.createContext(path, exchange -> {
+            JsonArray response;
             try {
-                exchange.getRequestURI().toURL();
+                response = list();
             } catch (Exception e) {
                 exchange.sendResponseHeaders(500, -1);
                 e.printStackTrace();
+                return;
+            }
+
+            byte[] buffer = response.toJson().getBytes();
+            exchange.sendResponseHeaders(200, buffer.length);
+            exchange.getResponseHeaders().add("Content-type", "application/json");
+            try (OutputStream output = exchange.getResponseBody()) {
+                output.write(buffer);
             }
         });
 

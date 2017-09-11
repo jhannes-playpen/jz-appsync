@@ -7,6 +7,7 @@ import java.time.LocalDate;
 
 import org.jsonbuddy.JsonArray;
 import org.jsonbuddy.JsonObject;
+import org.jsonbuddy.parse.JsonParser;
 
 public class PersonSync {
 
@@ -21,11 +22,10 @@ public class PersonSync {
     }
 
     public void doSync() throws IOException {
+        JsonArray personJson;
         try (InputStream request = serverUrl.openStream()) {
-
+            personJson = JsonParser.parseToArray(request);
         }
-
-        JsonArray personJson = server.list();
         for (Person person : personJson.objects(this::toPerson)) {
             clientRepo.save(person);
         }
