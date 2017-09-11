@@ -3,6 +3,8 @@ package com.soprasteria.javazone.person;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+
 import javax.sql.DataSource;
 
 import org.flywaydb.core.Flyway;
@@ -28,6 +30,12 @@ public class JdbcPersonRepository extends AbstractJdbRepository implements Perso
             stmt.setDate(4, Date.valueOf(person.getDateOfBirth()));
         });
         person.setId(id);
+    }
+
+    @Override
+    public List<Person> list() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override

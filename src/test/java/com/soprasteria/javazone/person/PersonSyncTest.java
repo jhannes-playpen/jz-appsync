@@ -27,5 +27,14 @@ public class PersonSyncTest {
         assertThat(clientRepo.retrieve(person.getId())).isNull();
     }
 
+    @Test
+    public void shouldSyncNewRows() {
+        Person person = sampleData.samplePerson();
+        serverRepo.save(person);
+
+        new PersonSync(serverRepo, clientRepo).doSync();
+
+        assertThat(clientRepo.retrieve(person.getId())).isEqualTo(person);
+    }
 
 }
