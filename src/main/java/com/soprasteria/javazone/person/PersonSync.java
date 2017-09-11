@@ -1,5 +1,7 @@
 package com.soprasteria.javazone.person;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.time.LocalDate;
 
@@ -18,7 +20,11 @@ public class PersonSync {
         this.clientRepo = clientRepo;
     }
 
-    public void doSync() {
+    public void doSync() throws IOException {
+        try (InputStream request = serverUrl.openStream()) {
+
+        }
+
         JsonArray personJson = server.list();
         for (Person person : personJson.objects(this::toPerson)) {
             clientRepo.save(person);

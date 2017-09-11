@@ -42,7 +42,7 @@ public class PersonSyncTest {
     }
 
     @Test
-    public void shouldSyncNewRows() {
+    public void shouldSyncNewRows() throws IOException {
         Person person = sampleData.samplePerson();
         serverRepo.save(person);
 
@@ -52,7 +52,7 @@ public class PersonSyncTest {
     }
 
     @Test
-    public void shouldSyncUpdates() {
+    public void shouldSyncUpdates() throws IOException {
         Person original = sampleData.samplePerson();
         serverRepo.save(original);
         personSync.doSync();
@@ -67,7 +67,7 @@ public class PersonSyncTest {
     }
 
     @Test
-    public void shouldOnlySyncUpdates() {
+    public void shouldOnlySyncUpdates() throws IOException {
         Person original = sampleData.samplePerson();
         serverRepo.save(original);
         personSync.doSync();
