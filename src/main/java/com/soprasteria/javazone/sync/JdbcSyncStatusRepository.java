@@ -15,7 +15,7 @@ public class JdbcSyncStatusRepository extends AbstractJdbRepository implements S
 
     @Override
     public Instant getLastSyncTime(String tableName) {
-        return Optional.ofNullable(retrieveById("select * from sync_status where table_name = ?", rs -> rs.getTimestamp("last_sync_time"), tableName))
+        return Optional.ofNullable(queryForObject("select * from sync_status where table_name = ?", rs -> rs.getTimestamp("last_sync_time"), tableName))
             .map(t -> t.toInstant())
             .orElse(Instant.ofEpochMilli(0));
     }

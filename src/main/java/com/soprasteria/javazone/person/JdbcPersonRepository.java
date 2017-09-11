@@ -50,7 +50,7 @@ public class JdbcPersonRepository extends AbstractJdbRepository implements Perso
 
     @Override
     public Person retrieve(UUID id) {
-        return retrieveById("select * from persons where id = ?", this::mapRow, id);
+        return queryForObject("select * from persons where id = ?", this::mapRow, id);
     }
 
     private Person mapRow(ResultSet rs) throws SQLException {

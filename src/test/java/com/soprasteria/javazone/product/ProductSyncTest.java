@@ -7,7 +7,6 @@ import java.net.URL;
 
 import javax.sql.DataSource;
 
-import org.flywaydb.core.Flyway;
 import org.h2.jdbcx.JdbcConnectionPool;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,10 +36,6 @@ public class ProductSyncTest {
         URL serverUrl = server.start();
 
         DataSource clientDs = JdbcConnectionPool.create("jdbc:h2:mem:client", "", "");
-        Flyway flyway = new Flyway();
-        flyway.setDataSource(clientDs);
-        flyway.clean();
-        flyway.migrate();
 
         clientRepo = new JdbcProductRepository(clientDs);
         syncStatusRepository = new JdbcSyncStatusRepository(clientDs);
@@ -56,6 +51,16 @@ public class ProductSyncTest {
         productSync.doSync();
 
         assertThat(clientRepo.retrieve(product.getId())).isEqualTo(product);
+    }
+
+    @Test
+    public void shouldSyncMinimalProduct() throws IOException {
+        Product minimal = sampleData.minimalProduct();
+        serverRepo.save(minimal);
+
+        productSync.doSync();
+
+        assertThat(clientRepo.retrieve(minimal.getId())).isEqualTo(minimal);
     }
 
 

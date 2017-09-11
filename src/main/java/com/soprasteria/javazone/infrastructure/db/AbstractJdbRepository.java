@@ -21,26 +21,10 @@ public class AbstractJdbRepository {
         this.dataSource = dataSource;
     }
 
-    protected Long save(String sql, StatementPreparer preparer) {
-        try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement stmt = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
-                preparer.prepare(stmt);
-
-                stmt.executeUpdate();
-                try (ResultSet rs = stmt.getGeneratedKeys()) {
-                    rs.next();
-                    return rs.getLong(1);
-                }
-            }
-        } catch (SQLException e) {
-            throw ExceptionHelper.soften(e);
-        }
-    }
-
-    protected <T> T retrieveById(String sql, ResultSetMapper<T> mapper, Object id) {
+    protected <T> T queryForObject(String sql, ResultSetMapper<T> mapper, Object... parameters) {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-                stmt.setObject(1, id);
+                setParameters(stmt, parameters);
 
                 try (ResultSet rs = stmt.executeQuery()) {
                     return rs.next() ? mapper.map(rs) : null;

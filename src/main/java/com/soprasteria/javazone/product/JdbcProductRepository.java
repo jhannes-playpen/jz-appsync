@@ -39,7 +39,7 @@ public class JdbcProductRepository extends AbstractJdbRepository implements Prod
 
     @Override
     public Product retrieve(UUID id) {
-        return retrieveById("select * from products where id = ?", this::mapRow, id);
+        return queryForObject("select * from products where id = ?", this::mapRow, id);
     }
 
     @Override
