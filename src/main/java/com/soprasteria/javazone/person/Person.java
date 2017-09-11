@@ -2,6 +2,8 @@ package com.soprasteria.javazone.person;
 
 import java.time.LocalDate;
 
+import org.jsonbuddy.JsonObject;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,5 +21,24 @@ public class Person {
 
     @Getter @Setter
     private LocalDate dateOfBirth;
+
+    public JsonObject toJson() {
+        return new JsonObject()
+            .put("id", getId())
+            .put("first-name", getFirstName())
+            .put("middle-name", getMiddleName())
+            .put("last-name", getLastName())
+            .put("date-of-birth", getDateOfBirth().toString());
+    }
+
+    public static Person fromJson(JsonObject json) {
+        Person person = new Person();
+        person.setId(json.requiredLong("id"));
+        person.setFirstName(json.requiredString("first-name"));
+        person.setMiddleName(json.requiredString("middle-name"));
+        person.setLastName(json.requiredString("last-name"));
+        person.setDateOfBirth(LocalDate.parse(json.requiredString("date-of-birth")));
+        return person;
+    }
 
 }
