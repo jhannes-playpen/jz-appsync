@@ -20,7 +20,7 @@ public class PersonSyncTest {
     private PersonRepository serverRepo = new JdbcPersonRepository(serverDs);
     private PersonSyncServer server = new PersonSyncServer(serverRepo);
 
-    private PersonSync personSync = new PersonSync(serverRepo, server, clientRepo);
+    private PersonSync personSync = new PersonSync(server, clientRepo);
 
     @Test
     public void shouldNotSyncAutomatically() {

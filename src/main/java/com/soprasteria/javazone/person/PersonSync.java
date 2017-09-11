@@ -7,12 +7,10 @@ import org.jsonbuddy.JsonObject;
 
 public class PersonSync {
 
-    private PersonRepository serverRepo;
     private PersonRepository clientRepo;
     private PersonSyncServer server;
 
-    public PersonSync(PersonRepository serverRepo, PersonSyncServer server, PersonRepository clientRepo) {
-        this.serverRepo = serverRepo;
+    public PersonSync(PersonSyncServer server, PersonRepository clientRepo) {
         this.server = server;
         this.clientRepo = clientRepo;
     }
@@ -21,9 +19,6 @@ public class PersonSync {
         JsonArray personJson = server.list();
         for (Person person : personJson.objects(this::toPerson)) {
             clientRepo.save(person);
-        }
-
-        for (Person person : serverRepo.list()) {
         }
     }
 
