@@ -11,11 +11,13 @@ public class PersonRepositoryTest {
     @Test
     public void shouldRetrieveSavedPerson() {
         Person person = samplePerson();
-        assertThat(person).hasNoNullFieldsOrProperties();
         repository.save(person);
+        assertThat(person).hasNoNullFieldsOrProperties();
 
         assertThat(repository.retrieve(person.getId()))
             .isEqualToComparingFieldByField(person);
+
+        assertThat(repository.retrieve(-123L)).isNull();
     }
 
     private Person samplePerson() {

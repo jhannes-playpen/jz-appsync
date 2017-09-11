@@ -4,6 +4,6 @@ public interface PersonRepository {
 
     void save(Person person);
 
-    Person retrieve(Long id);
+    Person retrieve(long id);
 
 }
