@@ -7,6 +7,8 @@ import javax.sql.DataSource;
 
 import org.flywaydb.core.Flyway;
 
+import com.soprasteria.javazone.infrastructure.db.AbstractJdbRepository;
+
 public class JdbcPersonRepository extends AbstractJdbRepository implements PersonRepository {
 
     public JdbcPersonRepository(DataSource dataSource) {

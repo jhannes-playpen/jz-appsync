@@ -1,4 +1,4 @@
-package com.soprasteria.javazone.person;
+package com.soprasteria.javazone.infrastructure.db;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,8 +8,7 @@ import java.sql.SQLException;
 import javax.sql.DataSource;
 
 import com.soprasteria.javazone.infrastructure.ExceptionHelper;
-import com.soprasteria.javazone.infrastructure.db.ResultSetMapper;
-import com.soprasteria.javazone.infrastructure.db.StatementPreparer;
+import com.soprasteria.javazone.person.Person;
 
 public class AbstractJdbRepository {
 
