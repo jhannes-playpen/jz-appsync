@@ -42,4 +42,8 @@ public class SampleData {
         return new Product();
     }
 
+    public Product sampleProduct() {
+        return new Product();
+    }
+
 }

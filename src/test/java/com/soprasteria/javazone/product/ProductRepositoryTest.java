@@ -2,6 +2,8 @@ package com.soprasteria.javazone.product;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.Instant;
+
 import javax.sql.DataSource;
 
 import org.h2.jdbcx.JdbcConnectionPool;
@@ -26,8 +28,18 @@ public class ProductRepositoryTest {
     }
 
     @Test
-    public void shouldListUpdates() {
+    public void shouldListUpdates() throws InterruptedException {
+        Product oldProduct = sampleData.sampleProduct();
+        repository.save(oldProduct);
+        Thread.sleep(10);
+        Instant since = Instant.now();
+        Thread.sleep(10);
+        Product newProduct = sampleData.sampleProduct();
+        repository.save(newProduct);
 
+        assertThat(repository.listChanges(since))
+            .contains(newProduct)
+            .doesNotContain(oldProduct);
     }
 
     @Test

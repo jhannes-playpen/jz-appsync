@@ -12,7 +12,6 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import com.soprasteria.javazone.infrastructure.ExceptionHelper;
-import com.soprasteria.javazone.person.Person;
 
 public class AbstractJdbRepository {
 
@@ -52,13 +51,13 @@ public class AbstractJdbRepository {
         }
     }
 
-    protected List<Person> queryForList(String sql, ResultSetMapper<Person> mapper, Object... parameters) {
+    protected <T> List<T> queryForList(String sql, ResultSetMapper<T> mapper, Object... parameters) {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                 setParameters(stmt, parameters);
 
                 try (ResultSet rs = stmt.executeQuery()) {
-                    List<Person> result = new ArrayList<>();
+                    List<T> result = new ArrayList<>();
                     while (rs.next()) {
                         result.add(mapper.map(rs));
                     }

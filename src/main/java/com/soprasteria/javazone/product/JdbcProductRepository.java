@@ -2,6 +2,8 @@ package com.soprasteria.javazone.product;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 import javax.sql.DataSource;
@@ -23,13 +25,18 @@ public class JdbcProductRepository extends AbstractJdbRepository implements Prod
     @Override
     public void save(Product product) {
         product.setId(UUID.randomUUID());
-        executeUpdate("insert into products (id) values (?)",
-            product.getId());
+        executeUpdate("insert into products (id, updated_at) values (?, ?)",
+            product.getId(), Instant.now());
     }
 
     @Override
     public Product retrieve(UUID id) {
         return retrieveById("select * from products where id = ?", rs -> mapRow(rs), id);
+    }
+
+    @Override
+    public List<Product> listChanges(Instant since) {
+        return queryForList("select * from products where updated_at > ?", this::mapRow, since);
     }
 
     private Product mapRow(ResultSet rs) throws SQLException {
