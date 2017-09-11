@@ -38,7 +38,7 @@ public class AbstractJdbRepository {
         }
     }
 
-    protected Person retrieveById(String sql, ResultSetMapper<Person> mapper, Object id) {
+    protected <T> T retrieveById(String sql, ResultSetMapper<T> mapper, Object id) {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                 stmt.setObject(1, id);

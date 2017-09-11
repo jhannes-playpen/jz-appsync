@@ -14,6 +14,8 @@ import org.junit.Test;
 
 import com.soprasteria.javazone.SampleData;
 import com.soprasteria.javazone.infrastructure.server.AbstractSyncServer;
+import com.soprasteria.javazone.sync.JdbcSyncStatusRepository;
+import com.soprasteria.javazone.sync.SyncStatusRepository;
 
 public class PersonSyncTest {
 
@@ -27,6 +29,8 @@ public class PersonSyncTest {
 
     private PersonSync personSync;
 
+    private SyncStatusRepository syncStatusRepository;
+
     @Before
     public void startServer() throws IOException {
         server = new PersonSyncServer(serverRepo);
@@ -37,9 +41,11 @@ public class PersonSyncTest {
         flyway.setDataSource(clientDs);
         flyway.clean();
         flyway.migrate();
-        clientRepo = new JdbcPersonRepository(clientDs);
 
-        personSync = new PersonSync(serverUrl, clientRepo);
+        clientRepo = new JdbcPersonRepository(clientDs);
+        syncStatusRepository = new JdbcSyncStatusRepository(clientDs);
+
+        personSync = new PersonSync(serverUrl, clientRepo, syncStatusRepository);
     }
 
     @Test

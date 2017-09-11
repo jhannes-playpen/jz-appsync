@@ -9,15 +9,18 @@ import java.time.Instant;
 import org.jsonbuddy.JsonArray;
 import org.jsonbuddy.parse.JsonParser;
 
+import com.soprasteria.javazone.sync.SyncStatusRepository;
+
 public class PersonSync {
 
     private PersonRepository clientRepo;
     private URL serverUrl;
-    private Instant lastSyncTime = Instant.ofEpochMilli(0);
+    private SyncStatusRepository syncStatusRepository;
 
-    public PersonSync(URL serverUrl, PersonRepository clientRepo) {
+    public PersonSync(URL serverUrl, PersonRepository clientRepo, SyncStatusRepository syncStatusRepository) {
         this.serverUrl = serverUrl;
         this.clientRepo = clientRepo;
+        this.syncStatusRepository = syncStatusRepository;
     }
 
     public void doSync() throws IOException {
@@ -29,16 +32,15 @@ public class PersonSync {
     }
 
     private void setLastSyncTime(Instant lastSyncTime) {
-        this.lastSyncTime = lastSyncTime;
-
+        syncStatusRepository.setLastSyncTime("persons", lastSyncTime);
     }
 
     private Instant getLastSyncTime() {
-        return lastSyncTime;
+        return syncStatusRepository.getLastSyncTime("persons");
     }
 
     private URL getUrl(Instant since) throws MalformedURLException {
-        return new URL(serverUrl, "/api/persons?since=" + since);
+        return new URL(serverUrl, "/api/persons?since=" + since.toString());
     }
 
     private JsonArray readUpdates(URL url) throws IOException {
