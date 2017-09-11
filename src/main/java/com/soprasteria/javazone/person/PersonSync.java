@@ -12,22 +12,22 @@ import org.jsonbuddy.parse.JsonParser;
 public class PersonSync {
 
     private PersonRepository clientRepo;
-    private PersonSyncServer server;
     private URL serverUrl;
 
-    public PersonSync(PersonSyncServer server, URL serverUrl, PersonRepository clientRepo) {
-        this.server = server;
+    public PersonSync(URL serverUrl, PersonRepository clientRepo) {
         this.serverUrl = serverUrl;
         this.clientRepo = clientRepo;
     }
 
     public void doSync() throws IOException {
-        JsonArray personJson;
-        try (InputStream request = serverUrl.openStream()) {
-            personJson = JsonParser.parseToArray(request);
-        }
-        for (Person person : personJson.objects(this::toPerson)) {
+        for (Person person : readUpdates(new URL(serverUrl, "/api/persons")).objects(this::toPerson)) {
             clientRepo.save(person);
+        }
+    }
+
+    private JsonArray readUpdates(URL url) throws IOException {
+        try (InputStream request = url.openStream()) {
+            return JsonParser.parseToArray(request);
         }
     }
 
@@ -40,5 +40,4 @@ public class PersonSync {
         person.setDateOfBirth(LocalDate.parse(json.requiredString("date-of-birth")));
         return person;
     }
-
 }

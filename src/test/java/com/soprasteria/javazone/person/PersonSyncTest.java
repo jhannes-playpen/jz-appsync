@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.soprasteria.javazone.SampleData;
+import com.soprasteria.javazone.infrastructure.server.AbstractSyncServer;
 
 public class PersonSyncTest {
 
@@ -22,16 +23,16 @@ public class PersonSyncTest {
 
     private DataSource serverDs = JdbcConnectionPool.create("jdbc:h2:mem:server", "", "");
     private PersonRepository serverRepo = new JdbcPersonRepository(serverDs);
-    private PersonSyncServer server = new PersonSyncServer(serverRepo);
+    private AbstractSyncServer server;
 
     private PersonSync personSync;
 
     @Before
     public void startServer() throws IOException {
+        server = new PersonSyncServer(serverRepo);
         URL serverUrl = server.start();
-        personSync = new PersonSync(server, serverUrl, clientRepo);
+        personSync = new PersonSync(serverUrl, clientRepo);
     }
-
 
     @Test
     public void shouldNotSyncAutomatically() {

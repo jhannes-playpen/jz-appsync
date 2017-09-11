@@ -1,19 +1,17 @@
 package com.soprasteria.javazone.person;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.URL;
 
 import org.jsonbuddy.JsonArray;
 import org.jsonbuddy.JsonObject;
 
-public class PersonSyncServer {
+import com.soprasteria.javazone.infrastructure.server.AbstractSyncServer;
+
+public class PersonSyncServer extends AbstractSyncServer {
 
     private PersonRepository repository;
 
-    public PersonSyncServer(PersonRepository repository) {
+    public PersonSyncServer(PersonRepository repository) throws IOException {
         this.repository = repository;
     }
 
@@ -28,33 +26,11 @@ public class PersonSyncServer {
             );
     }
 
-    @SuppressWarnings("restriction")
-    public URL start() throws IOException {
-        InetSocketAddress address = new InetSocketAddress(InetAddress.getLocalHost(), 0);
-        com.sun.net.httpserver.HttpServer server = com.sun.net.httpserver.HttpServer.create(address, 0);
-
-        String path = "/api/persons";
-        server.createContext(path, exchange -> {
-            JsonArray response;
-            try {
-                response = list();
-            } catch (Exception e) {
-                exchange.sendResponseHeaders(500, -1);
-                e.printStackTrace();
-                return;
-            }
-
-            byte[] buffer = response.toJson().getBytes();
-            exchange.sendResponseHeaders(200, buffer.length);
-            exchange.getResponseHeaders().add("Content-type", "application/json");
-            try (OutputStream output = exchange.getResponseBody()) {
-                output.write(buffer);
-            }
+    @Override
+    protected void addContextPaths() {
+        addJsonContextPath("/api/persons", uri -> {
+            return list();
         });
-
-        server.start();
-        address = server.getAddress();
-        return new URL("http", address.getHostString(), address.getPort(), path);
     }
 
 }
