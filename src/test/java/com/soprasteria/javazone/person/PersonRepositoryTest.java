@@ -6,7 +6,7 @@ import org.junit.Test;
 
 public class PersonRepositoryTest {
 
-    private PersonRepository repository;
+    private PersonRepository repository = new JdbcPersonRepository();
 
     @Test
     public void shouldRetrieveSavedPerson() {
@@ -19,8 +19,7 @@ public class PersonRepositoryTest {
     }
 
     private Person samplePerson() {
-        // TODO Auto-generated method stub
-        return null;
+        return new Person();
     }
 
 }
