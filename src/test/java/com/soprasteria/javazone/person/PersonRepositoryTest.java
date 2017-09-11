@@ -1,6 +1,12 @@
 package com.soprasteria.javazone.person;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.Test;
+
 public class PersonRepositoryTest {
+
+    private PersonRepository repository;
 
     @Test
     public void shouldRetrieveSavedPerson() {
@@ -10,6 +16,11 @@ public class PersonRepositoryTest {
 
         assertThat(repository.retrieve(person.getId()))
             .isEqualToComparingFieldByField(person);
+    }
+
+    private Person samplePerson() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }
