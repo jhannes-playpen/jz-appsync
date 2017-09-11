@@ -28,4 +28,17 @@ public class PersonRepositoryTest {
         assertThat(repository.retrieve(-123L)).isNull();
     }
 
+    @Test
+    public void shouldUpdatePerson() {
+        Person original = sampleData.samplePerson();
+        repository.save(original);
+
+        Person updated = sampleData.samplePerson();
+        updated.setId(original.getId());
+        repository.save(updated);
+
+        assertThat(repository.retrieve(original.getId()))
+            .isEqualToComparingFieldByField(updated);
+    }
+
 }
