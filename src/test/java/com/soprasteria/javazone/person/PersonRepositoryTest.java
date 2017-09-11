@@ -41,4 +41,13 @@ public class PersonRepositoryTest {
             .isEqualToComparingFieldByField(updated);
     }
 
+    @Test
+    public void shouldOnlySyncUpdates() {
+        Person person = sampleData.samplePerson();
+        repository.save(person);
+
+        repository.delete(person.getId());
+
+        assertThat(repository.retrieve(person.getId())).isNull();
+    }
 }
