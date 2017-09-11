@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import javax.sql.DataSource;
 
 import org.h2.jdbcx.JdbcConnectionPool;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.soprasteria.javazone.SampleData;
@@ -50,9 +51,21 @@ public class PersonSyncTest {
         serverRepo.save(updated);
         personSync.doSync();
 
-
         assertThat(clientRepo.retrieve(original.getId()))
             .isEqualToComparingFieldByField(updated);
+    }
+
+    @Test
+    @Ignore
+    public void shouldOnlySyncUpdates() {
+        Person original = sampleData.samplePerson();
+        serverRepo.save(original);
+        personSync.doSync();
+
+        clientRepo.delete(original.getId());
+        personSync.doSync();
+
+        assertThat(clientRepo.retrieve(original.getId())).isNull();
     }
 
 }

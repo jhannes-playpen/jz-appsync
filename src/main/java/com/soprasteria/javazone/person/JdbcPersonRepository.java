@@ -59,4 +59,10 @@ public class JdbcPersonRepository extends AbstractJdbRepository implements Perso
         return person;
     }
 
+    @Override
+    public void delete(long id) {
+        // TODO Auto-generated method stub
+
+    }
+
 }

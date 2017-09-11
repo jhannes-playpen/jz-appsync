@@ -10,4 +10,6 @@ public interface PersonRepository {
 
     List<Person> list();
 
+    void delete(long id);
+
 }
