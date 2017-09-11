@@ -1,4 +1,4 @@
-package com.soprasteria.javazone.person;
+package com.soprasteria.javazone.product;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,28 +11,28 @@ import org.jsonbuddy.parse.JsonParser;
 
 import com.soprasteria.javazone.sync.SyncStatusRepository;
 
-public class PersonSync {
+public class ProductSync {
 
-    private PersonRepository clientRepo;
-    private URL serverUrl;
     private SyncStatusRepository syncStatusRepository;
+    private ProductRepository clientRepo;
+    private URL serverUrl;
 
-    public PersonSync(URL serverUrl, PersonRepository clientRepo, SyncStatusRepository syncStatusRepository) {
+    public ProductSync(URL serverUrl, ProductRepository clientRepo, SyncStatusRepository syncStatusRepository) {
         this.serverUrl = serverUrl;
         this.clientRepo = clientRepo;
         this.syncStatusRepository = syncStatusRepository;
     }
 
     public void doSync() throws IOException {
-        Instant lastSync = syncStatusRepository.getLastSyncTime("persons");
-        for (Person person : readUpdates(getUrl(lastSync)).objects(Person::fromJson)) {
-            clientRepo.save(person);
+        Instant lastSync = syncStatusRepository.getLastSyncTime("products");
+        for (Product products : readUpdates(getUrl(lastSync)).objects(Product::fromJson)) {
+            clientRepo.save(products);
         }
-        syncStatusRepository.setLastSyncTime("persons", Instant.now());
+        syncStatusRepository.setLastSyncTime("products", Instant.now());
     }
 
     private URL getUrl(Instant since) throws MalformedURLException {
-        return new URL(serverUrl, "/api/persons?since=" + since.toString());
+        return new URL(serverUrl, "/api/products?since=" + since.toString());
     }
 
     private JsonArray readUpdates(URL url) throws IOException {
@@ -40,4 +40,5 @@ public class PersonSync {
             return JsonParser.parseToArray(request);
         }
     }
+
 }
