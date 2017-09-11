@@ -44,6 +44,17 @@ public class PersonRepositoryTest {
     }
 
     @Test
+    public void shouldPersistMinimalPerson() {
+        Person person = sampleData.minimalPerson();
+        assertThat(person.getMiddleName()).isNull();
+        assertThat(person.getDateOfBirth()).isNull();
+        repository.save(person);
+
+        assertThat(repository.retrieve(person.getId()))
+            .isEqualToComparingFieldByField(person);
+    }
+
+    @Test
     public void shouldOnlySyncUpdates() {
         Person person = sampleData.samplePerson();
         repository.save(person);

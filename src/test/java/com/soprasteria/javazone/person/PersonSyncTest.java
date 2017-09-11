@@ -67,6 +67,16 @@ public class PersonSyncTest {
     }
 
     @Test
+    public void shouldSyncMinimalPerson() throws IOException {
+        Person minimalPerson = sampleData.minimalPerson();
+        serverRepo.save(minimalPerson);
+
+        personSync.doSync();
+
+        assertThat(clientRepo.retrieve(minimalPerson.getId())).isEqualTo(minimalPerson);
+    }
+
+    @Test
     public void shouldSyncUpdates() throws IOException, InterruptedException {
         Person original = sampleData.samplePerson();
         serverRepo.save(original);
