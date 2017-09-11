@@ -2,11 +2,20 @@ package com.soprasteria.javazone.person;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Random;
+
+import javax.sql.DataSource;
+
+import org.h2.jdbcx.JdbcConnectionPool;
 import org.junit.Test;
 
 public class PersonRepositoryTest {
 
-    private PersonRepository repository = new JdbcPersonRepository();
+    private DataSource dataSource = JdbcConnectionPool.create("jdbc:h2:mem:person", "", "");
+
+    private PersonRepository repository = new JdbcPersonRepository(dataSource);
+
+    private Random random = new Random();
 
     @Test
     public void shouldRetrieveSavedPerson() {
@@ -21,7 +30,13 @@ public class PersonRepositoryTest {
     }
 
     private Person samplePerson() {
-        return new Person();
+        Person person = new Person();
+        person.setFirstName(pickOne(new String[] { "Johannes", "John", "James", "Peter", "Paul" }));
+        return person;
+    }
+
+    private <T> T pickOne(T[] strings) {
+        return strings[random.nextInt(strings.length)];
     }
 
 }
