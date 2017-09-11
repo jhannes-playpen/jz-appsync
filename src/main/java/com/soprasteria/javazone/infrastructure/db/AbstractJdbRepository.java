@@ -1,11 +1,13 @@
 package com.soprasteria.javazone.infrastructure.db;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,6 +75,10 @@ public class AbstractJdbRepository {
                 stmt.setObject(index++, parameter);
             }
         }
+    }
+
+    protected LocalDate toLocalDate(Date date) {
+        return date != null ? date.toLocalDate() : null;
     }
 
 }

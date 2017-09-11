@@ -1,10 +1,8 @@
 package com.soprasteria.javazone.person;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -61,10 +59,6 @@ public class JdbcPersonRepository extends AbstractJdbRepository implements Perso
         person.setLastName(rs.getString("last_name"));
         person.setDateOfBirth(toLocalDate(rs.getDate("date_of_birth")));
         return person;
-    }
-
-    private LocalDate toLocalDate(Date date) {
-        return date != null ? date.toLocalDate() : null;
     }
 
     @Override
