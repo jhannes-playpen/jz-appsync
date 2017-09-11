@@ -44,7 +44,12 @@ public class ProductRepositoryTest {
 
     @Test
     public void shouldDeleteProduct() {
+        Product product = sampleData.sampleProduct();
+        repository.save(product);
 
+        repository.delete(product.getId());
+
+        assertThat(repository.retrieve(product.getId())).isNull();
     }
 
 

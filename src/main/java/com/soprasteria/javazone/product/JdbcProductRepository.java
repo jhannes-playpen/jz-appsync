@@ -45,4 +45,9 @@ public class JdbcProductRepository extends AbstractJdbRepository implements Prod
         return product;
     }
 
+    @Override
+    public void delete(UUID id) {
+        executeUpdate("delete from products where id = ?", id);
+    }
+
 }

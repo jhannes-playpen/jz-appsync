@@ -12,4 +12,6 @@ public interface ProductRepository {
 
     List<Product> listChanges(Instant since);
 
+    void delete(UUID id);
+
 }
