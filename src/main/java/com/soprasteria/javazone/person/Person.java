@@ -1,23 +1,21 @@
 package com.soprasteria.javazone.person;
 
+import java.time.LocalDate;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@ToString
 public class Person {
+
+    @Getter @Setter
     private Long id;
-    private String firstName;
 
-    public Long getId() {
-        return id;
-    }
+    @Getter @Setter
+    private String firstName, middleName, lastName;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+    @Getter @Setter
+    private LocalDate dateOfBirth;
 
 }
