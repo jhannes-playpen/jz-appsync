@@ -1,6 +1,7 @@
 package com.soprasteria.javazone.person;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import org.jsonbuddy.JsonObject;
 
@@ -14,7 +15,7 @@ import lombok.ToString;
 public class Person {
 
     @Getter @Setter
-    private Long id;
+    private UUID id;
 
     @Getter @Setter
     private String firstName, middleName, lastName;

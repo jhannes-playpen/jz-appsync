@@ -2,6 +2,8 @@ package com.soprasteria.javazone.person;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.UUID;
+
 import javax.sql.DataSource;
 
 import org.h2.jdbcx.JdbcConnectionPool;
@@ -25,7 +27,7 @@ public class PersonRepositoryTest {
         assertThat(repository.retrieve(person.getId()))
             .isEqualToComparingFieldByField(person);
 
-        assertThat(repository.retrieve(-123L)).isNull();
+        assertThat(repository.retrieve(UUID.randomUUID())).isNull();
     }
 
     @Test

@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.UUID;
 
 import javax.sql.DataSource;
 
@@ -45,7 +46,7 @@ public class JdbcPersonRepository extends AbstractJdbRepository implements Perso
     }
 
     @Override
-    public Person retrieve(long id) {
+    public Person retrieve(UUID id) {
         return retrieveById("select * from persons where id = ?", this::mapRow, id);
     }
 
@@ -60,7 +61,7 @@ public class JdbcPersonRepository extends AbstractJdbRepository implements Perso
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(UUID id) {
         executeUpdate("delete from persons where id = ?", id);
     }
 

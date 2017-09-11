@@ -36,10 +36,10 @@ public class AbstractJdbRepository {
         }
     }
 
-    protected Person retrieveById(String sql, ResultSetMapper<Person> mapper, long id) {
+    protected Person retrieveById(String sql, ResultSetMapper<Person> mapper, Object id) {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-                stmt.setLong(1, id);
+                stmt.setObject(1, id);
 
                 try (ResultSet rs = stmt.executeQuery()) {
                     return rs.next() ? mapper.map(rs) : null;
@@ -53,7 +53,7 @@ public class AbstractJdbRepository {
     protected List<Person> queryForList(String sql, ResultSetMapper<Person> mapper) {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-    
+
                 try (ResultSet rs = stmt.executeQuery()) {
                     List<Person> result = new ArrayList<>();
                     while (rs.next()) {
@@ -74,7 +74,7 @@ public class AbstractJdbRepository {
                 for (Object parameter : parameters) {
                     stmt.setObject(index++, parameter);
                 }
-    
+
                 return stmt.executeUpdate();
             }
         } catch (SQLException e) {
