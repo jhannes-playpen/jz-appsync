@@ -2,9 +2,13 @@ package com.soprasteria.javazone.person;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.io.IOException;
+import java.net.URL;
+
 import javax.sql.DataSource;
 
 import org.h2.jdbcx.JdbcConnectionPool;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.soprasteria.javazone.SampleData;
@@ -20,7 +24,14 @@ public class PersonSyncTest {
     private PersonRepository serverRepo = new JdbcPersonRepository(serverDs);
     private PersonSyncServer server = new PersonSyncServer(serverRepo);
 
-    private PersonSync personSync = new PersonSync(server, clientRepo);
+    private PersonSync personSync;
+
+    @Before
+    public void startServer() throws IOException {
+        URL serverUrl = server.start();
+        personSync = new PersonSync(server, serverUrl, clientRepo);
+    }
+
 
     @Test
     public void shouldNotSyncAutomatically() {

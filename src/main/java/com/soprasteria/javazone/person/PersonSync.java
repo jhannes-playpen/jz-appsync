@@ -1,5 +1,6 @@
 package com.soprasteria.javazone.person;
 
+import java.net.URL;
 import java.time.LocalDate;
 
 import org.jsonbuddy.JsonArray;
@@ -9,9 +10,11 @@ public class PersonSync {
 
     private PersonRepository clientRepo;
     private PersonSyncServer server;
+    private URL serverUrl;
 
-    public PersonSync(PersonSyncServer server, PersonRepository clientRepo) {
+    public PersonSync(PersonSyncServer server, URL serverUrl, PersonRepository clientRepo) {
         this.server = server;
+        this.serverUrl = serverUrl;
         this.clientRepo = clientRepo;
     }
 
