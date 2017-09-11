@@ -12,7 +12,7 @@ import com.soprasteria.javazone.person.Person;
 
 public class AbstractJdbRepository {
 
-    private DataSource dataSource;
+    protected DataSource dataSource;
 
     public AbstractJdbRepository(DataSource dataSource) {
         this.dataSource = dataSource;
