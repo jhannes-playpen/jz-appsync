@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -41,6 +43,23 @@ public class AbstractJdbRepository {
 
                 try (ResultSet rs = stmt.executeQuery()) {
                     return rs.next() ? mapper.map(rs) : null;
+                }
+            }
+        } catch (SQLException e) {
+            throw ExceptionHelper.soften(e);
+        }
+    }
+
+    protected List<Person> queryForList(String sql, ResultSetMapper<Person> mapper) {
+        try (Connection connection = dataSource.getConnection()) {
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+    
+                try (ResultSet rs = stmt.executeQuery()) {
+                    List<Person> result = new ArrayList<>();
+                    while (rs.next()) {
+                        result.add(mapper.map(rs));
+                    }
+                    return result;
                 }
             }
         } catch (SQLException e) {

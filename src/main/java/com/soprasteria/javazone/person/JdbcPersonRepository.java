@@ -1,20 +1,15 @@
 package com.soprasteria.javazone.person;
 
-import java.sql.Connection;
 import java.sql.Date;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
 
 import org.flywaydb.core.Flyway;
 
-import com.soprasteria.javazone.infrastructure.ExceptionHelper;
 import com.soprasteria.javazone.infrastructure.db.AbstractJdbRepository;
-import com.soprasteria.javazone.infrastructure.db.ResultSetMapper;
 
 public class JdbcPersonRepository extends AbstractJdbRepository implements PersonRepository {
 
@@ -40,23 +35,6 @@ public class JdbcPersonRepository extends AbstractJdbRepository implements Perso
     @Override
     public List<Person> list() {
         return queryForList("select * from persons", this::mapRow);
-    }
-
-    protected List<Person> queryForList(String sql, ResultSetMapper<Person> mapper) {
-        try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-
-                try (ResultSet rs = stmt.executeQuery()) {
-                    List<Person> result = new ArrayList<>();
-                    while (rs.next()) {
-                        result.add(mapper.map(rs));
-                    }
-                    return result;
-                }
-            }
-        } catch (SQLException e) {
-            throw ExceptionHelper.soften(e);
-        }
     }
 
     @Override
